@@ -50,8 +50,8 @@
   }
   #content{
     .height;
-    /*overflow-y: scroll;*/
     padding: 0;
+    overflow:hidden;
   }
   .el-header{
     background: #41b883;
@@ -59,8 +59,5 @@
   .el-footer{
     background:#1f2d3d;
   }
-  .el-tabs__header{
-    position: absolute;
-    background: #fff;
-  }
+
 </style>
