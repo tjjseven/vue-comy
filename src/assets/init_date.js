@@ -6,7 +6,7 @@ const timeUnit = ['刚刚', '分钟前', '小时前', '天前', '月前', '年�
  * @param dateStr YY-mm-dd HH:mm:ss
  * @returns {*}
  */
-export default function timeFormat(dateStr) {
+export default function timeFormat (dateStr) {
   let dateTime = new Date(dateStr).getTime()
   let now = new Date().getTime()
   let time = (now - dateTime) / 1000

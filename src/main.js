@@ -3,14 +3,13 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-/*引入ElementUI*/
+/* 引入ElementUI */
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-Vue.use(ElementUI);
-// Vue.use(ElementUI, { size: 'small' })
+import axios from 'axios'
+Vue.use(ElementUI)
 
-import axios from 'axios';
-Vue.prototype.$ajax = axios;
+Vue.prototype.$ajax = axios
 
 Vue.config.productionTip = false
 

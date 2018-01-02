@@ -1,13 +1,12 @@
-/* eslint-disable */
 <template>
   <div id="heads">{{headerC}}</div>
 </template>
 <script>
   export default{
-    name : "heads",
-    data(){
-      return{
-        headerC : 'vue'
+    name: 'heads',
+    data () {
+      return {
+        headerC: 'vue'
       }
     }
   }
@@ -16,5 +15,6 @@
   #heads{
     line-height: 60px;
     color: #fff;
+    text-align: center;
   }
 </style>
