@@ -56,7 +56,7 @@
 <script>
   import 'mescroll/src/mescroll.min.css'
   import MeScroll from 'mescroll'
-  import timeFormat from '../assets/init_date'
+  import timeFormat from '../assets/js/init_date'
   export default {
     name: 'scroll',
     data () {
@@ -92,9 +92,10 @@
       })
       // 初始化vue后,显示vue模板布局
       document.getElementById('dataList').style.display = 'block'
+
       var img = document.querySelectorAll('img')
       this.imgLoad(img, function (img) {
-        console.log(img)
+//        console.log(img)
       })
     },
     methods: {

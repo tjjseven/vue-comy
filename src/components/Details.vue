@@ -48,21 +48,44 @@
         <div class="commit_content" v-html="replies.content">}</div>
       </li>
     </ul>
+      <transition name="trans-com">
+        <ul v-if="backComFlag" class="back_com_ul">
+          <li @click="$router.go(-1)"><i class="el-icon-arrow-left"></i>&nbsp;&nbsp;返回</li>
+          <li>评论&nbsp;&nbsp;<i class="el-icon-edit-outline"></i></li>
+        </ul>
+      </transition>
     </div>
   </div>
 </template>
 <script>
-  import timeFormat from '../assets/init_date'
+  import timeFormat from '../assets/js/init_date'
   export default {
-    name: 'details',
+    name: 'detail',
     data () {
       return {
         details: '',
         authorTime: '',
-        content: ''
+        content: '',
+        backComFlag: false
       }
     },
+    /*
+     *  beforecreated：el 和 data 并未初始化
+        created:完成了 data 数据的初始化，el没有
+        beforeMount：完成了 el 和 data 初始化
+        mounted ：完成挂载
+     *
+     * */
+    beforecreated () {
+      console.log('beforecreated')
+    },
+    created () {
+      console.log(this.backComFlag)
+    },
     mounted () {
+      this.backComFlag = true
+      console.log(this.backComFlag)
+
       this.$ajax({
         method: 'get',
         url: '/api/v1/topic/' + this.$route.query.id
@@ -80,7 +103,7 @@
             this.details.tab = '招聘'
             break
         }
-        console.log(this.details)
+//        console.log(this.details)
 
         /* 将结果commit到mutations中 */
 //        this.$store.commit('SAVE_LISTDATA', res.data.result);
@@ -90,30 +113,31 @@
             console.log(err)
           }
         })
-//      this.$mount()
-//      console.log(this.$refs.con)
     },
     methods: {
+      showBackCom () {
+        this.backComFlag = false
+      },
       /* 格式化时间 */
       timeFormat (list) {
         return list.map((item) => {
           item.time = timeFormat(item.create_at)
           return item
         })
-      },
-      as () {
-        console.log(this.$refs.con)
       }
-    },
-    directives: {
-      re: {
-        // 指令的定义
-        inserted: function (el) {
-//          console.log(arguments)
-          el.innerHTML = arguments[2].context.details.content
-        }
-      }
+//      as () {
+//        console.log(this.$refs.con)
+//      }
     }
+//    directives: {
+//      re: {
+//        // 指令的定义
+//        inserted: function (el) {
+//          console.log(arguments)
+//          el.innerHTML = arguments[2].context.details.content
+//        }
+//      }
+//    }
   }
 </script>
 <style lang="less">
@@ -161,5 +185,34 @@
     .commit_content{
       margin-top: .5rem;
     }
+    .back_com_ul {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 61px;
+      font-size: .8rem;
+      color: #717171;
+      line-height: 61px;
+      z-index: 999;
+      background: #f5f5f5;
+      letter-spacing: -9999rem;
+      li {
+        display: inline-block;
+        width: 50%;
+        box-sizing: border-box;
+        letter-spacing: 0;
+        text-align: center;
+      }
+      li:nth-child(1){
+        border-right: 1px solid #ececec;
+      }
+    }
+  }
+  .trans-com-enter,.trans-com-leave-to{
+    transform: translateY(110%);
+  }
+  .trans-com-enter-active,.trans-com-leave-active{
+    transition: all 1s linear;
   }
 </style>

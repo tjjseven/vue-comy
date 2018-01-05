@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/Index'
-import Details from '@/components/Details'
+import Detail from '@/components/Details'
 import Message from '@/components/Message'
 import About from '@/components/About'
 
@@ -20,8 +20,8 @@ export default new Router({
     },
     {
       path: '/details',
-      name: 'details',
-      component: Details
+      name: 'detail',
+      component: Detail
     },
     {
       path: '/message',

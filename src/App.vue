@@ -70,10 +70,7 @@
     opacity: 0;
   }
   .trans-router-enter-active,.trans-router-leave-active{
-    transition: all .2s ease;
-  }
-  .trans-router-enter-to,.trans-router-leave{
-    /*transform: translateX(0);*/
+    transition: all .3s linear;
   }
   .tab{
     background: #41b883;
