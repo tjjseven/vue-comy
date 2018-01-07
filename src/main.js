@@ -3,12 +3,19 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-/* 引入ElementUI */
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
+/* 引入mint-ui */
+import { Header, Button, Tabbar, TabItem, Navbar, TabContainer, TabContainerItem, Spinner } from 'mint-ui'
+import 'mint-ui/lib/style.css'
 import axios from 'axios'
 
-Vue.use(ElementUI)
+Vue.component(Header.name, Header)
+Vue.component(Button.name, Button)
+Vue.component(Tabbar.name, Tabbar)
+Vue.component(TabItem.name, TabItem)
+Vue.component(Navbar.name, Navbar)
+Vue.component(TabContainer.name, TabContainer)
+Vue.component(TabContainerItem.name, TabContainerItem)
+Vue.component(Spinner.name, Spinner)
 
 Vue.prototype.$ajax = axios
 axios.defaults.baseURL = 'https://www.vue-js.com/'

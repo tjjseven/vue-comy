@@ -1,15 +1,15 @@
 <template>
-  <el-container id="app">
-    <el-header><Heads/></el-header>
+  <div id="app">
+    <Heads/>
 
-    <el-main id="content">
+    <div id="content">
       <transition name="trans-router" mode="out-in">
         <router-view/>
       </transition>
-    </el-main>
+    </div>
 
-    <el-footer><Foots/></el-footer>
-  </el-container>
+    <Foots/>
+  </div>
 </template>
 
 <script>
@@ -37,10 +37,10 @@
     padding: 0;
     margin: 0;
     list-style-type: none;
-    /*font-weight: normal;*/
   }
   img{
     width: 100%;
+    display: block;
   }
   a{
     text-decoration: none;
@@ -55,16 +55,10 @@
     .height;
   }
   #content{
-    .height;
-    padding: 0;
-    overflow-x: hidden;
+    padding: 50px 0 ;
+    height:calc(~"100% - 100px");
+    overflow-x:hidden ;
     overflow-y: auto;
-  }
-  .el-header{
-    background: #41b883;
-  }
-  .el-footer{
-    background:#1f2d3d;
   }
   .trans-router-enter,.trans-router-leave-to{
     opacity: 0;
@@ -78,5 +72,14 @@
     text-align: center;
     border-radius: .2rem;
     font-size: .6rem;
+    padding: .1rem;
+  }
+
+  .table{
+    display:table ;
+  }
+  .table_cell{
+    display: table-cell;
+    vertical-align: top;
   }
 </style>

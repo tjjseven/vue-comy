@@ -5,49 +5,34 @@
     <div class="mescroll-bounce">
       <!--展示上拉加载的数据列表-->
       <ul id="dataList" class="data-list">
-        <li v-for="(data, index) in timeFormat(pdlist)" :key='index'>
-          <router-link :to="{path: '/details', query: {id: data.id}}" tag="div">
-            <!--top-->
-            <el-row :gutter="20" :style="{marginBottom:'.6rem'}">
-              <!--left-->
-              <el-col :span="4"><div class="grid-content bg-purple">
-                <img :src="data.author.avatar_url" alt="" @error="errImg">
-              </div></el-col>
-              <!--center-->
-              <el-col :span="16" style="padding-left: 0"><div class="grid-content bg-purple data_title">
-                {{data.title}}
-              </div></el-col>
-              <!--right-->
-              <el-col v-if='data.top' :span="4"><div class="grid-content bg-purple tab" style="background: #e40e0e">
-                置顶
-              </div></el-col>
-              <el-col v-else-if='data.good' :span="4"><div class="grid-content bg-purple tab">
-                精华
-              </div></el-col>
-              <el-col v-else :span="4"><div class="grid-content bg-purple tab">
-                {{data.tab}}
-              </div></el-col>
-            </el-row>
-            <!--bottom-->
-            <el-row :gutter="20" style="color: #515151">
-              <!--left-->
-              <el-col :span="7"><div class="grid-content bg-purple">
-                {{data.author.loginname}}
-              </div></el-col>
-              <!--center-->
-              <el-col :span="8" style="padding-left:0"><div class="grid-content bg-purple" style="text-align:left;font-size: .6rem">
-                发布于{{data.time}}
-              </div></el-col>
-              <!--right-->
-              <el-col :span="9"><div class="grid-content bg-purple" style="text-align:right">
-                <i class="el-icon-edit-outline"></i>
-                {{data.reply_count}}
-                <i class="el-icon-view"></i>
-                {{data.visit_count}}
-              </div></el-col>
-            </el-row>
-          </router-link>
-        </li>
+        <router-link :to="{path: '/details', query: {id: data.id}}" tag="li"
+                       v-for="(data, index) in timeFormat(pdlist)" :key='index'>
+          <!--top-->
+          <div class="list_top table">
+            <div class="top_img table_cell">
+              <img :src="data.author.avatar_url" @error="errImg">
+            </div>
+            <div class="top_title table_cell">
+              <h2 class="two_ell">{{data.title}}</h2>
+            </div>
+            <div class="top_tab table_cell">
+              <p v-if='data.top' class="tab" style="background: #e40e0e">置顶</p>
+              <p v-else-if='data.good' class="tab">精华</p>
+              <p v-else class="tab">{{data.tab}}</p>
+            </div>
+          </div>
+          <!--bottom-->
+          <div class="list_btm">
+            <div class="btm_left">
+              <span>{{data.author.loginname}}</span>
+              <span style="font-size: .6rem">发布于{{data.time}}</span>
+            </div>
+            <div class="btm_right">
+              <span>{{data.reply_count}}</span>
+              <span>{{data.visit_count}}</span>
+            </div>
+          </div>
+        </router-link>
       </ul>
     </div>
   </div>
@@ -195,7 +180,38 @@
 </script>
 
 <style lang="less">
-
+  .list_top{
+    width: 100%;
+    margin-bottom:.6rem;
+    .top_img{
+      width: 12%;
+    }
+    .top_title{
+      width: 73%;
+      h2{
+        font-size: .7rem;
+        font-weight: normal;
+        margin: 0 .5rem;
+      }
+    }
+    .top_tab{
+      width: 15%;
+      padding:0 .2rem;
+    }
+  }
+  .list_btm{
+    color: #515151;
+    height:1rem;
+    .btm_left{
+      float: left;
+      span{
+        margin-right: .5rem;
+      }
+    }
+    .btm_right{
+      float: right;
+    }
+  }
 
 
 </style>

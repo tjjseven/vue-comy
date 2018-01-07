@@ -1,23 +1,15 @@
 <template>
-    <el-row id="foots">
-      <el-col :span="8">
-        <div class="grid-content bg-purple">
-          <router-link to='/'>{{footer[0]}}</router-link>
-        </div>
-      </el-col>
-      <el-col :span="8">
-        <div class="grid-content bg-purple-light">
-          <div class="grid-content bg-purple">
-            <router-link to='/message'>{{footer[1]}}</router-link>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="8">
-        <div class="grid-content bg-purple">
-          <router-link to='/about'>{{footer[2]}}</router-link>
-        </div>
-      </el-col>
-    </el-row>
+  <mt-tabbar id="foots" fixed>
+    <mt-tab-item>
+      <router-link to='/'>{{footer[0]}}</router-link>
+    </mt-tab-item>
+    <mt-tab-item>
+      <router-link to='/message'>{{footer[1]}}</router-link>
+    </mt-tab-item>
+    <mt-tab-item>
+      <router-link to='/about'>{{footer[2]}}</router-link>
+    </mt-tab-item>
+  </mt-tabbar>
 </template>
 <script>
   export default{
@@ -31,12 +23,19 @@
 </script>
 <style lang="less">
   #foots{
-    text-align: center;
+    .mint-tab-item-label{
+      font-size:14px;
+    }
     .actClass{
       color: #41b883;
     }
-    .el-col{
-      line-height: 60px;
+    .mint-tab-item{
+      background:#1f2d3d;
+      padding: 0;
+    }
+    .mint-tab-item-label a{
+      padding: 18px 0;
+      display: block;
     }
   }
 

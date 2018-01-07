@@ -1,5 +1,7 @@
 <template>
-  <div id="heads">{{headerC}}</div>
+  <mt-header :title="headerC" fixed>
+
+  </mt-header>
 </template>
 <script>
   export default{
@@ -12,9 +14,8 @@
   }
 </script>
 <style lang="less">
-  #heads{
-    line-height: 60px;
-    color: #fff;
-    text-align: center;
+  .mint-header{
+    background: #41b883;
+    height: 50px;
   }
 </style>
