@@ -3,9 +3,9 @@
     <p v-if="!details">
       <mt-spinner type="snake"></mt-spinner>
     </p>
-    <div v-else>
-      <h1>{{details.title}}</h1>
-      <div class="table" :style="{marginTop:'1rem'}">
+    <div v-else id="details">
+      <h1 @click="sheetVisible=!sheetVisible">{{details.title}}</h1>
+      <div class="table" :style="{marginTop:'1rem',width: '100%'}">
         <!--left-->
         <div class="table_cell" style="width: 12%">
           <img :src="details.author.avatar_url" alt="author">
@@ -28,44 +28,57 @@
       <h2 v-else class="commit_count">{{details.replies.length}}人评论:</h2>
       <ul class="commit_list">
         <li v-for="(replies, index) in timeFormat(details.replies)" :key="index">
-          <div class="table" :style="{marginTop:'1rem'}">
+          <div class="table" :style="{marginTop:'1rem',width: '100%'}">
             <!--left-->
             <div class="table_cell" style="width: 12%">
               <img :src="replies.author.avatar_url" alt="">
             </div>
             <!--center-->
-            <div class="table_cell" style="width: 70%;padding-left: .5rem">
+            <div class="table_cell" style="width: 66%;padding-left: .5rem">
               <p>{{replies.author.loginname}} <span style="color:#386ac0">#{{index+1}}楼
-                <span v-show="details.author.loginname===replies.author.loginname">【题主】</span></span>
+                <span v-show="details.author.loginname===replies.author.loginname">【楼主】</span></span>
               </p>
               <span>{{replies.time}}</span>
             </div>
             <!--right-->
-            <div class="table_cell" style="width: 18%;text-align: right">
-              <i class="el-icon-star-on"></i>
-              {{replies.ups.length}}&nbsp;
-              <i class="el-icon-edit"></i>
+            <div class="table_cell" style="width: 22%;text-align: right">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-zan"></use>
+              </svg>
+              <span>{{replies.ups.length}}&nbsp;&nbsp;</span>
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-huifu"></use>
+              </svg>
             </div>
           </div>
           <div class="commit_content" v-html="replies.content"></div>
         </li>
       </ul>
-      <ul class="back_com_ul">
-        <li @click="$router.go(-1)"><i class="el-icon-arrow-left"></i>&nbsp;&nbsp;返回</li>
-        <li>评论&nbsp;&nbsp;<i class="el-icon-edit-outline"></i></li>
-      </ul>
+
+      <mt-actionsheet
+        :actions="actions"
+        v-model="sheetVisible"
+        closeOnClickModal
+        cancelText="">
+      </mt-actionsheet>
     </div>
   </div>
 </template>
 <script>
   import timeFormat from '../assets/js/init_date'
+  import { MessageBox } from 'mint-ui'
   export default {
     name: 'detail',
     data () {
       return {
         details: '',
         authorTime: '',
-        content: ''
+        content: '',
+        sheetVisible: true,
+        actions: [
+          {name: '返回', method: this.toBack},
+          {name: '评论', method: this.toCommit}
+        ]
       }
     },
     /*
@@ -106,7 +119,24 @@
         })
     },
     methods: {
-
+      toBack () {
+        this.$router.go(-1)
+      },
+      toCommit () {
+        var config = {
+          closeOnClickModal: false,
+          confirmButtonText: '提交',
+          showInput: false
+        }
+        var textarea = '<textarea>11</textarea>'
+        MessageBox.prompt(textarea, '请输入评论内容', config).then(({ value, action }) => {
+          this.sheetVisible = true
+          console.log(value)
+        }, (err) => {
+          this.sheetVisible = true
+          console.log(err)
+        })
+      },
       /* 格式化时间 */
       timeFormat (list) {
         return list.map((item) => {
@@ -130,6 +160,12 @@
   }
 </script>
 <style lang="less">
+  #details>.v-modal{
+    display: none;
+  }
+  #details>.mint-actionsheet{
+    background: none;
+  }
   .details>p{
     width: 36px;
     margin: 0 auto;
@@ -137,6 +173,14 @@
   .details{
     font-size: .7rem;
     padding: 1rem;
+    .mint-actionsheet-listitem{
+      width: 50%;
+      display: inline-block;
+      background: #f5f5f5;
+      height: 50px;
+      line-height: 50px;
+      font-size: 16px;
+    }
     h1{
       font-size: .9rem;
       line-height: 1.5rem;
@@ -197,5 +241,14 @@
       }
     }
   }
-
+  textarea{
+    width: 95%;
+    height: 100px;
+    outline: none;
+    resize: none;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    border-radius: .1rem;
+    margin-top: 10px;
+  }
 </style>

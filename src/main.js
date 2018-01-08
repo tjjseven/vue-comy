@@ -4,7 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 /* 引入mint-ui */
-import { Header, Button, Tabbar, TabItem, Navbar, TabContainer, TabContainerItem, Spinner } from 'mint-ui'
+import { Header, Button, Tabbar, TabItem, Navbar, TabContainer, TabContainerItem,
+          Spinner, Actionsheet, MessageBox } from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import axios from 'axios'
 
@@ -16,6 +17,8 @@ Vue.component(Navbar.name, Navbar)
 Vue.component(TabContainer.name, TabContainer)
 Vue.component(TabContainerItem.name, TabContainerItem)
 Vue.component(Spinner.name, Spinner)
+Vue.component(Actionsheet.name, Actionsheet)
+Vue.component(MessageBox.name, MessageBox)
 
 Vue.prototype.$ajax = axios
 axios.defaults.baseURL = 'https://www.vue-js.com/'

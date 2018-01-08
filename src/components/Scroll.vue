@@ -28,7 +28,13 @@
               <span style="font-size: .6rem">发布于{{data.time}}</span>
             </div>
             <div class="btm_right">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-pingjia"></use>
+              </svg>
               <span>{{data.reply_count}}</span>
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-Artboard"></use>
+              </svg>
               <span>{{data.visit_count}}</span>
             </div>
           </div>
@@ -210,6 +216,9 @@
     }
     .btm_right{
       float: right;
+      span:nth-child(2){
+        padding-right: .2rem;
+      }
     }
   }
 

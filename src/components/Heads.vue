@@ -8,13 +8,13 @@
     name: 'heads',
     data () {
       return {
-        headerC: 'vue'
+        headerC: 'vue社区'
       }
     }
   }
 </script>
 <style lang="less">
-  .mint-header{
+  header.mint-header{
     background: #41b883;
     height: 50px;
   }
