@@ -43,6 +43,8 @@
 </template>
 <script>
   import { MessageBox } from 'mint-ui'
+  import { mapActions } from 'vuex'
+  import { USER_LOGOUT } from '../vuex/store'
   export default {
     name: 'about',
     data () {
@@ -56,9 +58,11 @@
       }
     },
     methods: {
+      ...mapActions([USER_LOGOUT]),
       logout () {
         var self = this
         MessageBox.confirm('确定执行此操作?', {closeOnClickModal: false}).then(action => {
+          this.USER_LOGOUT(this.user)
           self.$router.replace({path: '/login'})
         }, (err) => {
           console.log(err)
@@ -141,14 +145,14 @@
     }
     .logout{
       color: #fff;
-      width: 40%;
+      width: 60%;
       text-align: center;
       height: 40px;
       line-height: 40px;
       margin: 3rem auto;
       background: #e40e0e;
       border-radius: .2rem;
-      box-shadow: rgba(0, 0, 0, 0.117647) 0px 2px 6px, rgba(0, 0, 0, 0.239216) 0px 1px 2px;
+      box-shadow: rgba(0, 0, 0, 0.117647) 0 2px 6px, rgba(0, 0, 0, 0.239216) 0 1px 2px;
     }
   }
 </style>

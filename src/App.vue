@@ -3,9 +3,16 @@
     <Heads/>
 
     <div id="content">
+      <keep-alive>
+        <transition name="trans-router" mode="out-in">
+          <router-view v-if="$route.meta.keepAlive"/>
+        </transition>
+      </keep-alive>
+
       <transition name="trans-router" mode="out-in">
-        <router-view/>
+        <router-view v-if="!$route.meta.keepAlive"/>
       </transition>
+
     </div>
 
     <Foots/>

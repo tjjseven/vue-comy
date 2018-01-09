@@ -32,7 +32,7 @@
       myMsg () {
         if (true) {
           Toast({
-            message: '没有新消息',
+            message: '暂无消息',
             duration: 500
           })
           return

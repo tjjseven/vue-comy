@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <mt-field label="Access Token" placeholder="请输入token" v-model="username"></mt-field>
+    <mt-field label="Access Token" placeholder="请输入token" v-model="user.username"></mt-field>
     <mt-button type="primary" size="large" @click="sub">登录</mt-button>
     <div class="mint-field-state is-warning tips">
       <i class="mintui mintui-field-warning"></i>
@@ -13,20 +13,31 @@
 </template>
 <script>
   import { Toast } from 'mint-ui'
+  import { mapActions } from 'vuex'
+  import { USER_LOGIN } from '../vuex/store'
   export default {
     name: 'login',
     data () {
       return {
-        username: 'a38f7992-0096-4c65-b3ff-b7db7d264d98',
-        token: false
+        token: false,
+        user: {
+          username: 'a38f7992-0096-4c65-b3ff-b7db7d264d98'
+        }
       }
     },
     mounted () {
 
     },
     methods: {
+      // 映射USER_LOGIN
+      ...mapActions([USER_LOGIN]),
       sub () {
-        if (this.username) {
+        if (this.user.username) {
+          // 提交actions
+          this.USER_LOGIN(this.user)
+          // this.$store.dispatch(USER_LOGIN, this.user)
+          /* 跳转到登录之前的页面 */
+          this.$router.replace({ path: this.$route.query.redirect })
           Toast({
             message: '登录成功',
             duration: 500
@@ -43,7 +54,7 @@
 </script>
 <style lang="less">
   .login{
-    padding:7rem 2rem 0;
+    padding:5rem 2rem 0;
     button{
       margin-top: 1rem;
       background: #1bb973;

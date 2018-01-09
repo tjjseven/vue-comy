@@ -9,6 +9,10 @@ import { Header, Button, Tabbar, TabItem, Navbar, TabContainer, TabContainerItem
 import 'mint-ui/lib/style.css'
 import axios from 'axios'
 
+// import Vuex from 'vuex'
+import store from './vuex/store'
+// Vue.use(Vuex)
+
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 Vue.component(Tabbar.name, Tabbar)
@@ -33,9 +37,18 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 })
 router.beforeEach((to, from, next) => {
+  var auth = to.meta.auth // 标记是否需要登录
+  var isLogin = Boolean(store.state.user.username) // true用户已登录， false用户未登录
+  if (auth && !isLogin && to.path !== '/login') {
+    return next({
+      path: '/login',
+      query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
+    })
+  }
   next()
 })
