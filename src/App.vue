@@ -88,4 +88,17 @@
     fill: currentColor;
     overflow: hidden;
   }
+  .mint-popup{
+    width: 100%;
+    min-height: 100%;
+    .my-theme{
+      padding: 1rem;
+      .back>i{
+        font-size: 16px;
+      }
+    }
+  }
+  .mint-msgbox-confirm{
+    color: #41b883 !important;
+  }
 </style>

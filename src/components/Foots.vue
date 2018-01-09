@@ -1,13 +1,7 @@
 <template>
   <mt-tabbar id="foots" fixed>
-    <mt-tab-item>
-      <router-link to='/'>{{footer[0]}}</router-link>
-    </mt-tab-item>
-    <mt-tab-item>
-      <router-link to='/message'>{{footer[1]}}</router-link>
-    </mt-tab-item>
-    <mt-tab-item>
-      <router-link to='/about'>{{footer[2]}}</router-link>
+    <mt-tab-item v-for="(foot, index) in footer" :key="index">
+      <router-link :to='foot.path'>{{foot.name}}</router-link>
     </mt-tab-item>
   </mt-tabbar>
 </template>
@@ -16,7 +10,11 @@
     name: 'foots',
     data () {
       return {
-        footer: ['首页', '消息', '关于']
+        footer: [
+          {path: '/', name: '首页'},
+          {path: '/message', name: '消息'},
+          {path: '/about', name: '我的'}
+        ]
       }
     }
   }

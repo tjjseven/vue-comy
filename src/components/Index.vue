@@ -8,7 +8,7 @@
     </mt-navbar>
 
     <!-- tab-container -->
-    <mt-tab-container v-model="selected">
+    <mt-tab-container v-model="selected" swipeable>
       <mt-tab-container-item :id="index" v-for="(item, index) in navMsg" :key="index">
         <Scroll :tab="navMsg[index].tab" :scroll="'scroll'+index"/>
       </mt-tab-container-item>
@@ -27,6 +27,7 @@
     data () {
       return {
         selected: 0,
+        swipeable: true,
         navMsg: [
           { label: '全部', tab: 'all' },
           { label: '精华', tab: 'good' },
