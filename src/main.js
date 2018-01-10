@@ -5,7 +5,7 @@ import App from './App'
 import router from './router'
 /* 引入mint-ui */
 import { Header, Button, Tabbar, TabItem, Navbar, TabContainer, TabContainerItem,
-          Spinner, Actionsheet, MessageBox, Cell, Field, Badge, Popup } from 'mint-ui'
+          Spinner, Actionsheet, MessageBox, Cell, Field, Badge, Popup, Switch } from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import axios from 'axios'
 
@@ -27,6 +27,7 @@ Vue.component(Cell.name, Cell)
 Vue.component(Field.name, Field)
 Vue.component(Badge.name, Badge)
 Vue.component(Popup.name, Popup)
+Vue.component(Switch.name, Switch)
 
 Vue.prototype.$ajax = axios
 axios.defaults.baseURL = 'https://www.vue-js.com/'

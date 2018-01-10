@@ -97,7 +97,7 @@
               callcack(img)
               clearInterval(timer)
             } else {
-              console.log('404')
+//              console.log('404')
             }
           }, 50)
           img.onerror = () => {

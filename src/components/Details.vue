@@ -22,6 +22,11 @@
         </div>
       </div>
       <div v-html="details.content" class="det_content"></div>
+      <div class="follow">
+        <span>{{isFollow ? '哈哈哈，您已关注！' : '喜欢这篇文章？那就点击关注吧'}}</span>
+        <div v-show="!sessUser" class="mask" @click="toLogin"></div>
+        <mt-switch v-model="isFollow" @change.native="change"></mt-switch>
+      </div>
       <!--<div v-re></div>-->
       <!--<div ref="con" @click="as">1222222</div>-->
       <h2 v-if="!details.replies.length" style="margin-top: 2rem;text-align: center">没有人评论，快来抢沙发...</h2>
@@ -54,7 +59,6 @@
           <div class="commit_content" v-html="replies.content"></div>
         </li>
       </ul>
-
       <mt-actionsheet
         :actions="actions"
         v-model="sheetVisible"
@@ -71,10 +75,12 @@
     name: 'detail',
     data () {
       return {
+        sessUser: '',
         details: '',
         authorTime: '',
         content: '',
         sheetVisible: true,
+        isFollow: false,
         actions: [
           {name: '返回', method: this.toBack},
           {name: '评论', method: this.toCommit}
@@ -90,6 +96,8 @@
      * */
 
     mounted () {
+      this.sessUser = sessionStorage.getItem('user')
+
       this.$ajax({
         method: 'get',
         url: '/api/v1/topic/' + this.$route.query.id
@@ -118,7 +126,16 @@
           }
         })
     },
+    computed: {
+
+    },
     methods: {
+      toLogin () {
+        this.$router.replace({path: '/login', query: {redirect: this.$route.fullPath}})
+      },
+      change (e) {
+        console.log(e)
+      },
       toBack () {
         this.$router.go(-1)
       },
@@ -250,5 +267,26 @@
     font-size: 14px;
     border-radius: .1rem;
     margin-top: 10px;
+  }
+  .follow{
+    position:relative;
+    height: 32px;
+    line-height: 32px;
+    padding: 1rem;
+    border-bottom: 1px solid #e3e3e3;
+    label{
+      float: right;
+      .mint-switch-input:checked + .mint-switch-core{
+        background: #41b883;
+      }
+    }
+    .mask{
+      position: absolute;
+      top:1rem;
+      right: 1rem;
+      width: 52px;
+      height: 32px;
+      z-index: 9;
+    }
   }
 </style>

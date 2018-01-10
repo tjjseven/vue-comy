@@ -12,7 +12,6 @@
       <transition name="trans-router" mode="out-in">
         <router-view v-if="!$route.meta.keepAlive"/>
       </transition>
-
     </div>
 
     <Foots/>
@@ -71,7 +70,7 @@
     opacity: 0;
   }
   .trans-router-enter-active,.trans-router-leave-active{
-    transition: all .3s linear;
+    transition: all .2s linear;
   }
   .tab{
     background: #41b883;

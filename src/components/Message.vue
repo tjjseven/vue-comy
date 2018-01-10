@@ -30,7 +30,7 @@
     },
     methods: {
       myMsg () {
-        if (true) {
+        if (this.popupMsg) {
           Toast({
             message: '暂无消息',
             duration: 500

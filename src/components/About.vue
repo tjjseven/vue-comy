@@ -51,7 +51,7 @@
       return {
         popupVisible: false,
         aboutList: [
-          {icon: '#icon-shoucang', text: '收藏的主题'},
+          {icon: '#icon-shoucang', text: '关注的主题'},
           {icon: '#icon-canyu', text: '回复的主题'},
           {icon: '#icon-fabu', text: '发布的主题'}
         ]
