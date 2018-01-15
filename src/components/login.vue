@@ -1,27 +1,27 @@
 <template>
   <div class="login">
-    <mt-field label="Access Token" placeholder="请输入token" v-model="user.username"></mt-field>
+    <mt-field label="Access Token" placeholder="请输入token" v-model="user.token"></mt-field>
     <mt-button type="primary" size="large" @click="sub">登录</mt-button>
     <div class="mint-field-state is-warning tips">
       <i class="mintui mintui-field-warning"></i>
-      <span @click="token=!token">如何获取Access Token</span>
+      <span @click="tokenFlag=!tokenFlag">如何获取Access Token</span>
     </div>
-    <p v-show="token" style="margin: 0 .5rem;line-height: 1rem;font-size: 12px;word-break: break-all">
+    <p v-show="tokenFlag" style="margin: 0 .5rem;line-height: 1rem;font-size: 12px;word-break: break-all">
       登录<a style="color:#41b883;" href="https://www.vue-js.com">vue社区</a>，在设置页面就可以看到自己的Access Token
     </p>
   </div>
 </template>
 <script>
   import { Toast } from 'mint-ui'
-  import { mapActions } from 'vuex'
-  import { USER_LOGIN } from '../vuex/store'
+  import { mapActions, mapMutations } from 'vuex'
+//  import { USER_LOGIN } from '../vuex/store'
   export default {
     name: 'login',
     data () {
       return {
-        token: false,
+        tokenFlag: false,
         user: {
-          username: 'a38f7992-0096-4c65-b3ff-b7db7d264d98'
+          token: 'a38f7992-0096-4c65-b3ff-b7db7d264d98'
         }
       }
     },
@@ -30,21 +30,59 @@
     },
     methods: {
       // 映射USER_LOGIN
-      ...mapActions([USER_LOGIN]),
+      ...mapActions([
+        'USER_LOGIN',
+        'sendAjax'
+      ]),
+      ...mapMutations([
+        'ABOUT_INFO'
+      ]),
       sub () {
-        if (this.user.username) {
-          // 提交actions
-          this.USER_LOGIN(this.user)
-          // this.$store.dispatch(USER_LOGIN, this.user)
-          /* 跳转到登录之前的页面 */
-          this.$router.replace({ path: this.$route.query.redirect })
-          Toast({
-            message: '登录成功',
-            duration: 500
+        if (this.user.token) {
+          this.$ajax({
+            method: 'post',
+            url: '/api/v1/accesstoken',
+            params: {
+              accesstoken: this.user.token
+            }
+          }).then((res) => {
+            console.log(res)
+//            this.user.userinfo = res.data
+            for (let item in res.data) {
+              this.$set(this.user, item, res.data[item])
+            }
+            // 提交actions
+            this.USER_LOGIN(this.user)
+            // this.$store.dispatch(USER_LOGIN, this.user)
+            // 获取用户信息
+            this.$ajax({
+              method: 'get',
+              url: '/api/v1/user/' + this.user.loginname
+            }).then((res) => {
+              this.ABOUT_INFO(res.data.data)
+            })
+            /* 跳转到登录之前的页面 */
+            if (this.$route.fullPath === '/login') {
+              this.$router.replace({path: '/about'})
+            }
+            this.$router.replace({path: this.$route.query.redirect})
+            Toast({
+              message: '登录成功',
+              duration: 500
+            })
           })
+            .catch((err) => {
+              if (err) {
+                console.log(err)
+                Toast({
+                  message: 'token错误，登录失败',
+                  duration: 1000
+                })
+              }
+            })
         } else {
           Toast({
-            message: '登录失败',
+            message: '不能为空',
             duration: 500
           })
         }

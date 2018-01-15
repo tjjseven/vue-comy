@@ -39,7 +39,7 @@
       }
     },
     mounted () {
-
+      console.log('index')
     },
     methods: {
 
@@ -74,13 +74,6 @@
     border-bottom: 2px solid #e4e7e1;
 
   }
-  /*超过两行显示省略号*/
-  .two_ell{
-    overflow:hidden;
-    text-overflow:ellipsis;
-    display:-webkit-box;
-    -webkit-box-orient:vertical;
-    -webkit-line-clamp:2;
-  }
+
 
 </style>

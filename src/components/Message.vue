@@ -10,7 +10,7 @@
       v-model="popupMsg"
       position="bottom"
       modal>
-      <div @click="popupMsg=!popupMsg" class="my-theme">
+      <div @click="popupMsg=!popupMsg" class="my_topic">
         <p class="back">
           <i class="mintui mintui-back"></i>返回
         </p>
@@ -30,7 +30,7 @@
     },
     methods: {
       myMsg () {
-        if (this.popupMsg) {
+        if (!this.popupMsg) {
           Toast({
             message: '暂无消息',
             duration: 500

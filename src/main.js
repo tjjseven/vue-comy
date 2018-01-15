@@ -5,13 +5,11 @@ import App from './App'
 import router from './router'
 /* 引入mint-ui */
 import { Header, Button, Tabbar, TabItem, Navbar, TabContainer, TabContainerItem,
-          Spinner, Actionsheet, MessageBox, Cell, Field, Badge, Popup, Switch } from 'mint-ui'
+          Spinner, Actionsheet, MessageBox, Cell, Field, Badge, Popup, Switch, Radio } from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import axios from 'axios'
 
-// import Vuex from 'vuex'
 import store from './vuex/store'
-// Vue.use(Vuex)
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
@@ -28,6 +26,7 @@ Vue.component(Field.name, Field)
 Vue.component(Badge.name, Badge)
 Vue.component(Popup.name, Popup)
 Vue.component(Switch.name, Switch)
+Vue.component(Radio.name, Radio)
 
 Vue.prototype.$ajax = axios
 axios.defaults.baseURL = 'https://www.vue-js.com/'
@@ -44,7 +43,7 @@ new Vue({
 })
 router.beforeEach((to, from, next) => {
   var auth = to.meta.auth // 标记是否需要登录
-  var isLogin = Boolean(store.state.user.username) // true用户已登录， false用户未登录
+  var isLogin = Boolean(store.state.login.user.token) // true用户已登录， false用户未登录
   if (auth && !isLogin && to.path !== '/login') {
     return next({
       path: '/login',

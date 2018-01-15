@@ -3,11 +3,11 @@
     <Heads/>
 
     <div id="content">
-      <keep-alive>
-        <transition name="trans-router" mode="out-in">
+      <transition name="trans-router" mode="out-in">
+        <keep-alive>
           <router-view v-if="$route.meta.keepAlive"/>
-        </transition>
-      </keep-alive>
+        </keep-alive>
+      </transition>
 
       <transition name="trans-router" mode="out-in">
         <router-view v-if="!$route.meta.keepAlive"/>
@@ -39,7 +39,7 @@
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB",
     "Microsoft YaHei","微软雅黑",Arial,sans-serif;
   }
-  body,ul,ol,li,p,h1,h2,h3,h4,h5,h6{
+  body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,table,tr,td{
     padding: 0;
     margin: 0;
     list-style-type: none;
@@ -96,15 +96,32 @@
   }
   .mint-popup{
     width: 100%;
+    height: 100%;
     min-height: 100%;
-    .my-theme{
+    overflow-y:auto;
+    .my_topic{
       padding: 1rem;
-      .back>i{
-        font-size: 16px;
+      .back{
+        font-size: .8rem;
+        i{
+          font-size: .8rem;
+        }
       }
     }
   }
+  .mint-toast{
+    z-index: 9999 !important;
+  }
   .mint-msgbox-confirm{
     color: #41b883 !important;
+  }
+  /*超过两行显示省略号*/
+  .two_ell{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    word-break: break-all;
   }
 </style>

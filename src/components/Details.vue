@@ -47,11 +47,11 @@
             </div>
             <!--right-->
             <div class="table_cell" style="width: 22%;text-align: right">
-              <svg class="icon" aria-hidden="true">
+              <svg class="icon" aria-hidden="true" @click="toLove">
                 <use xlink:href="#icon-zan"></use>
               </svg>
               <span>{{replies.ups.length}}&nbsp;&nbsp;</span>
-              <svg class="icon" aria-hidden="true">
+              <svg class="icon" aria-hidden="true" @click="toReply">
                 <use xlink:href="#icon-huifu"></use>
               </svg>
             </div>
@@ -70,7 +70,8 @@
 </template>
 <script>
   import timeFormat from '../assets/js/init_date'
-  import { MessageBox } from 'mint-ui'
+  import { MessageBox, Toast } from 'mint-ui'
+  import { mapState } from 'vuex'
   export default {
     name: 'detail',
     data () {
@@ -80,11 +81,12 @@
         authorTime: '',
         content: '',
         sheetVisible: true,
-        isFollow: false,
+        followFlag: '',
         actions: [
           {name: '返回', method: this.toBack},
           {name: '评论', method: this.toCommit}
-        ]
+        ],
+        idArr: []
       }
     },
     /*
@@ -115,10 +117,11 @@
             this.details.tab = '招聘'
             break
         }
-//        console.log(this.details)
-
-        /* 将结果commit到mutations中 */
-//        this.$store.commit('SAVE_LISTDATA', res.data.result);
+//        this.sendAjax({
+//          mutationName: 'ABOUT_INFO',
+//          method: 'get',
+//          url: '/api/v1/user/' + this.user.loginname
+//        })
       })
         .catch((err) => {
           if (err) {
@@ -127,28 +130,112 @@
         })
     },
     computed: {
-
+      ...mapState([
+        'login',
+        'about'
+      ]),
+      isFollow: {
+        get: function () {
+          if (this.about.about.collect_topics) {
+            this.about.about.collect_topics.map((item) => {
+              if (this.idArr.indexOf(item.id) === -1) {
+                this.idArr.unshift(item.id)
+              }
+              console.log(this.idArr)
+              if (this.idArr.indexOf(this.$route.query.id) !== -1) {
+                this.followFlag = true
+              } else {
+                this.followFlag = false
+              }
+            })
+            return this.followFlag
+          } else {
+            return false
+          }
+        },
+        set: function (newValue) {
+          this.followFlag = newValue
+        }
+      }
     },
     methods: {
-      toLogin () {
-        this.$router.replace({path: '/login', query: {redirect: this.$route.fullPath}})
+
+      change () {
+        console.log(this.isFollow)
+        var url = ''
+        if (!this.isFollow) {
+          url = 'collect'
+        } else {
+          url = 'de_collect'
+        }
+        this.$ajax({
+          method: 'post',
+          url: '/api/v1/topic/' + url,
+          params: {
+            accesstoken: this.login.user.token,
+            topic_id: this.$route.query.id
+          }
+        }).then((res) => {
+          console.log(res)
+        }).catch((err) => {
+          if (err) {
+            console.log(err)
+          }
+        })
       },
-      change (e) {
-        console.log(e)
+      toLove () {
+        if (!this.sessUser) {
+          this.toLogin()
+          return false
+        }
+      },
+      toReply () {
+        if (!this.sessUser) {
+          this.toLogin()
+          return false
+        }
+        alert(1)
       },
       toBack () {
         this.$router.go(-1)
       },
       toCommit () {
+        if (!this.sessUser) {
+          this.toLogin()
+          return false
+        }
         var config = {
           closeOnClickModal: false,
           confirmButtonText: '提交',
           showInput: false
         }
-        var textarea = '<textarea>11</textarea>'
+        var textarea = '<textarea placeholder="说点什么"></textarea>'
         MessageBox.prompt(textarea, '请输入评论内容', config).then(({ value, action }) => {
           this.sheetVisible = true
-          console.log(value)
+          var comText = document.querySelector('textarea').value
+          this.$ajax({
+            method: 'post',
+            url: '',
+            params: {
+              accesstoken: this.login.user.token,
+              content: comText
+            }
+          }).then((res) => {
+//            console.log(res)
+            Toast({
+              message: '提交成功',
+              duration: 1000
+            })
+          }).catch((err) => {
+            if (err) {
+              console.log(err)
+            }
+            Toast({
+              message: '提交失败',
+              duration: 1000
+            })
+          })
+//          console.log(value)
         }, (err) => {
           this.sheetVisible = true
           console.log(err)
@@ -160,6 +247,9 @@
           item.time = timeFormat(item.create_at)
           return item
         })
+      },
+      toLogin () {
+        this.$router.replace({path: '/login', query: {redirect: this.$route.fullPath}})
       }
 //      as () {
 //        console.log(this.$refs.con)
@@ -234,39 +324,18 @@
     .commit_content{
       margin-top: .5rem;
     }
-    .back_com_ul {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 50px;
-      font-size: .8rem;
-      color: #717171;
-      line-height: 50px;
-      z-index: 999;
-      background: #f5f5f5;
-      letter-spacing: -9999rem;
-      li {
-        display: inline-block;
-        width: 50%;
-        box-sizing: border-box;
-        letter-spacing: 0;
-        text-align: center;
-      }
-      li:nth-child(1){
-        border-right: 1px solid #ececec;
-      }
-    }
   }
-  textarea{
+  .mint-msgbox-message textarea{
     width: 95%;
     height: 100px;
     outline: none;
     resize: none;
     border: 1px solid #ccc;
-    font-size: 14px;
+    font-size: 12px;
     border-radius: .1rem;
     margin-top: 10px;
+    padding: .5rem;
+    box-sizing: border-box;
   }
   .follow{
     position:relative;
