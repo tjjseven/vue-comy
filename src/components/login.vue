@@ -46,14 +46,12 @@
               accesstoken: this.user.token
             }
           }).then((res) => {
-            console.log(res)
-//            this.user.userinfo = res.data
+//            console.log(res)
             for (let item in res.data) {
               this.$set(this.user, item, res.data[item])
             }
             // 提交actions
             this.USER_LOGIN(this.user)
-            // this.$store.dispatch(USER_LOGIN, this.user)
             // 获取用户信息
             this.$ajax({
               method: 'get',

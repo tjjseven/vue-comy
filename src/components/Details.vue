@@ -47,10 +47,12 @@
             </div>
             <!--right-->
             <div class="table_cell" style="width: 22%;text-align: right">
-              <svg class="icon" aria-hidden="true" @click="toLove">
-                <use xlink:href="#icon-zan"></use>
-              </svg>
-              <span>{{replies.ups.length}}&nbsp;&nbsp;</span>
+              <span @click="toLove($event, replies.id, replies.ups.length, index)" :style="{color: isUp(replies.ups) ? 'red' : '#000'}">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-zan"></use>
+                </svg>
+                <span>{{replies.ups.length}}&nbsp;&nbsp;</span>
+              </span>
               <svg class="icon" aria-hidden="true" @click="toReply">
                 <use xlink:href="#icon-huifu"></use>
               </svg>
@@ -71,7 +73,7 @@
 <script>
   import timeFormat from '../assets/js/init_date'
   import { MessageBox, Toast } from 'mint-ui'
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   export default {
     name: 'detail',
     data () {
@@ -96,10 +98,10 @@
         mounted ：完成挂载
      *
      * */
-
     mounted () {
+      /* 获取session user */
       this.sessUser = sessionStorage.getItem('user')
-
+      /* 获取主题信息 */
       this.$ajax({
         method: 'get',
         url: '/api/v1/topic/' + this.$route.query.id
@@ -117,23 +119,21 @@
             this.details.tab = '招聘'
             break
         }
-//        this.sendAjax({
-//          mutationName: 'ABOUT_INFO',
-//          method: 'get',
-//          url: '/api/v1/user/' + this.user.loginname
-//        })
+      }).catch((err) => {
+        if (err) {
+          console.log(err)
+        }
       })
-        .catch((err) => {
-          if (err) {
-            console.log(err)
-          }
-        })
     },
     computed: {
       ...mapState([
         'login',
         'about'
       ]),
+      ...mapGetters([
+//        'isUp'
+      ]),
+      /* 判断是否已关注 */
       isFollow: {
         get: function () {
           if (this.about.about.collect_topics) {
@@ -141,7 +141,7 @@
               if (this.idArr.indexOf(item.id) === -1) {
                 this.idArr.unshift(item.id)
               }
-              console.log(this.idArr)
+//              console.log(this.idArr)
               if (this.idArr.indexOf(this.$route.query.id) !== -1) {
                 this.followFlag = true
               } else {
@@ -159,7 +159,7 @@
       }
     },
     methods: {
-
+      /* 关注主题 */
       change () {
         console.log(this.isFollow)
         var url = ''
@@ -183,11 +183,45 @@
           }
         })
       },
-      toLove () {
+      /* 点赞评论 */
+      toLove (e, id, count, index) {
         if (!this.sessUser) {
           this.toLogin()
           return false
         }
+        var el = e.currentTarget
+        /* 点赞ajax */
+        this.$ajax({
+          method: 'post',
+          url: '/api/v1/reply/' + id + '/ups',
+          params: {
+            accesstoken: this.login.user.token
+          }
+        }).then((res) => {
+          if (res.data.action === 'up') {
+            el.style.color = 'red'
+            /* 触发视图更新 */
+            this.$set(this.details.replies[index].ups, count, this.login.user.id)
+            Toast({
+              message: '点赞成功',
+              duration: 1000
+            })
+          } else {
+            el.style.color = '#000'
+            this.details.replies[index].ups.splice(count - 1, 1)
+            Toast({
+              message: '取消点赞',
+              duration: 1000
+            })
+          }
+        }).catch((err) => {
+          if (err) {
+            Toast({
+              message: '网络故障',
+              duration: 1000
+            })
+          }
+        })
       },
       toReply () {
         if (!this.sessUser) {
@@ -248,13 +282,28 @@
           return item
         })
       },
+      /* 跳转login */
       toLogin () {
         this.$router.replace({path: '/login', query: {redirect: this.$route.fullPath}})
+      },
+      /* 判断是否已点赞 */
+      isUp (id) {
+        if (id.indexOf(this.login.user.id) !== -1) {
+          return true
+        } else {
+          return false
+        }
       }
 //      as () {
 //        console.log(this.$refs.con)
 //      }
     }
+//    watch: {
+//      details: function (newVal, oldVal) {
+//        this.details = newVal
+//        console.log(this.details)
+//      }
+//    }
 //    directives: {
 //      re: {
 //        // 指令的定义
@@ -347,6 +396,7 @@
       float: right;
       .mint-switch-input:checked + .mint-switch-core{
         background: #41b883;
+        border: 1px solid #41b883;
       }
     }
     .mask{

@@ -100,9 +100,13 @@
     min-height: 100%;
     overflow-y:auto;
     .my_topic{
-      padding: 1rem;
       .back{
         font-size: .8rem;
+        background: #41b883;
+        color: #fff;
+        height: 50px;
+        line-height: 50px;
+        padding:0 1rem;
         i{
           font-size: .8rem;
         }
@@ -114,6 +118,10 @@
   }
   .mint-msgbox-confirm{
     color: #41b883 !important;
+  }
+  .mint-navbar .mint-tab-item.is-selected{
+    border-bottom: 3px solid #41b883 !important;
+    color:#41b883 !important;
   }
   /*超过两行显示省略号*/
   .two_ell{

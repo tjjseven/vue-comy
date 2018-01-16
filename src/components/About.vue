@@ -4,7 +4,7 @@
       <div class="about_bg"></div>
       <img :src="login.user.avatar_url" alt="author" class="about_picture"/>
       <h2>{{login.user.loginname}}</h2>
-      <div class="about_net">
+      <div class="about_edit">
         <p @click="myTopics('aboutSite')">关于</p>
         <p @click="myTopics('release')">发布</p>
       </div>
@@ -75,7 +75,6 @@
   import timeFormat from '../assets/js/init_date'
   import { MessageBox, Toast } from 'mint-ui'
   import { mapState, mapActions, mapMutations } from 'vuex'
-//  import { USER_LOGOUT } from '../vuex/store'
   export default {
     name: 'about',
     data () {
@@ -174,6 +173,11 @@
           console.log(err)
         })
       },
+      getCount () {
+        for (var i = 0; i < this.aboutList.length; i++) {
+          this.aboutList[i].count = this.aboutMsg[this.aboutList[i].type].length
+        }
+      },
       myTopics (msg) {
         this.popupVisible = !this.popupVisible
         this.typeTopics = msg
@@ -193,15 +197,11 @@
           url: '/api/v1/user/' + this.login.user.loginname
         }).then((res) => {
           this.aboutMsg = res.data.data
-          this.aboutList[0].count = this.aboutMsg.collect_topics.length
-          this.aboutList[1].count = this.aboutMsg.recent_replies.length
-          this.aboutList[2].count = this.aboutMsg.recent_topics.length
+          this.getCount()
         })
       } else {
         this.aboutMsg = this.about.about
-        this.aboutList[0].count = this.about.about.collect_topics.length
-        this.aboutList[1].count = this.about.about.recent_replies.length
-        this.aboutList[2].count = this.about.about.recent_topics.length
+        this.getCount()
       }
     }
   }
@@ -257,7 +257,7 @@
         padding-right: .4rem;
       }
     }
-    .about_net{
+    .about_edit{
       width:100%;
       margin-top:1.5rem;
       letter-spacing: -9999rem;
@@ -295,7 +295,7 @@
       opacity: .5;
     }
     .about_site,.release{
-      padding: 1rem .5rem;
+      padding: 1rem 1.5rem 0;
     }
     .about_site{
       font-size: .7rem;
@@ -305,7 +305,7 @@
         line-height:1.2rem;
         padding-bottom: 1.5rem;
         a{
-          color: #1aa84a;
+          color: #41b883;
         }
       }
     }
@@ -323,7 +323,8 @@
         background: none;
       }
       .mint-radio-input:checked + .mint-radio-core{
-        background: #1aa84a;
+        background: #41b883;
+        border: 1px solid #41b883;
       }
       .mint-field .mint-cell-title{
         width: 80px;
@@ -339,16 +340,16 @@
           margin-top:.5rem;
           textarea{
             font-size: 14px;
-            text-indent: 28px;
+            text-indent: 14px;
           }
           ::-webkit-input-placeholder {
             color: #7d7d7d;
-            font-weight: 600;
           }
         }
       }
     }
     .topic_list{
+      padding: 0 1rem;
       margin-top: 1rem;
       font-size:.7rem;
       p{
