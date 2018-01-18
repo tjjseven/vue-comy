@@ -191,18 +191,14 @@
       }
     },
     mounted () {
-      if (JSON.stringify(this.about.about) === '{}') {
-        this.$ajax({
-          method: 'get',
-          url: '/api/v1/user/' + this.login.user.loginname
-        }).then((res) => {
-          this.aboutMsg = res.data.data
-          this.getCount()
-        })
-      } else {
-        this.aboutMsg = this.about.about
+      this.$ajax({
+        method: 'get',
+        url: '/user/' + this.login.user.loginname
+      }).then((res) => {
+        this.aboutMsg = res.data.data
+        this.ABOUT_INFO(res.data.data)
         this.getCount()
-      }
+      })
     }
   }
 </script>

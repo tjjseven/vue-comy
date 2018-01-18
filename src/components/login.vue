@@ -31,17 +31,18 @@
     methods: {
       // 映射USER_LOGIN
       ...mapActions([
-        'USER_LOGIN',
-        'sendAjax'
+        'USER_LOGIN'
       ]),
       ...mapMutations([
-        'ABOUT_INFO'
+        'ABOUT_INFO',
+        'LOADING'
       ]),
       sub () {
         if (this.user.token) {
+          this.LOADING(true)
           this.$ajax({
             method: 'post',
-            url: '/api/v1/accesstoken',
+            url: '/accesstoken',
             params: {
               accesstoken: this.user.token
             }
@@ -55,7 +56,7 @@
             // 获取用户信息
             this.$ajax({
               method: 'get',
-              url: '/api/v1/user/' + this.user.loginname
+              url: '/user/' + this.user.loginname
             }).then((res) => {
               this.ABOUT_INFO(res.data.data)
             })

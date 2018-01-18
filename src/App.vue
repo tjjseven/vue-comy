@@ -34,6 +34,7 @@
   .height{
     height:100%
   }
+  @importColor:#41b883 !important;
   html,body{
     .height;
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB",
@@ -117,11 +118,16 @@
     z-index: 9999 !important;
   }
   .mint-msgbox-confirm{
-    color: #41b883 !important;
+    color:@importColor;
   }
   .mint-navbar .mint-tab-item.is-selected{
     border-bottom: 3px solid #41b883 !important;
-    color:#41b883 !important;
+    color:@importColor;
+  }
+  .mint-spinner-snake{
+    border-top-color: @importColor;
+    border-left-color: @importColor;
+    border-bottom-color:@importColor;
   }
   /*超过两行显示省略号*/
   .two_ell{

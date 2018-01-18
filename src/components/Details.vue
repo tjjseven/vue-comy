@@ -23,9 +23,9 @@
       </div>
       <div v-html="details.content" class="det_content"></div>
       <div class="follow">
-        <span>{{isFollow ? '哈哈哈，您已关注！' : '喜欢这篇文章？那就点击关注吧'}}</span>
+        <span>{{followFlag ? '哈哈哈，您已关注！' : '喜欢这篇文章？那就点击关注吧'}}</span>
         <div v-show="!sessUser" class="mask" @click="toLogin"></div>
-        <mt-switch v-model="isFollow" @change.native="change"></mt-switch>
+        <mt-switch v-model="followFlag" @change.native="change"></mt-switch>
       </div>
       <!--<div v-re></div>-->
       <!--<div ref="con" @click="as">1222222</div>-->
@@ -43,7 +43,7 @@
               <p>{{replies.author.loginname}} <span style="color:#386ac0">#{{index+1}}楼
                 <span v-show="details.author.loginname===replies.author.loginname">【楼主】</span></span>
               </p>
-              <span>{{replies.time}}</span>
+              <span>{{replies.timer}}</span>
             </div>
             <!--right-->
             <div class="table_cell" style="width: 22%;text-align: right">
@@ -53,7 +53,7 @@
                 </svg>
                 <span>{{replies.ups.length}}&nbsp;&nbsp;</span>
               </span>
-              <svg class="icon" aria-hidden="true" @click="toReply">
+              <svg class="icon" aria-hidden="true" @click="toCommit(replies.id, replies.author.loginname, details.replies.length)">
                 <use xlink:href="#icon-huifu"></use>
               </svg>
             </div>
@@ -73,7 +73,7 @@
 <script>
   import timeFormat from '../assets/js/init_date'
   import { MessageBox, Toast } from 'mint-ui'
-  import { mapState, mapGetters } from 'vuex'
+  import { mapState, mapGetters, mapMutations } from 'vuex'
   export default {
     name: 'detail',
     data () {
@@ -99,14 +99,17 @@
      *
      * */
     mounted () {
+      console.log(timeFormat(new Date()))
       /* 获取session user */
       this.sessUser = sessionStorage.getItem('user')
       /* 获取主题信息 */
       this.$ajax({
         method: 'get',
-        url: '/api/v1/topic/' + this.$route.query.id
+        url: '/topic/' + this.$route.query.id
       }).then((res) => {
         this.details = res.data.data
+        console.log(this.details)
+        this.DETAILS(res.data.data)
         this.authorTime = timeFormat(this.details.create_at)
         switch (this.details.tab) {
           case 'share':
@@ -124,59 +127,73 @@
           console.log(err)
         }
       })
+      /* 判断是否已关注 */
+//      JSON.stringify(this.about.about) === '{}'
+      this.$ajax({
+        method: 'get',
+        url: '/user/' + this.login.user.loginname
+      }).then((res) => {
+        this.ABOUT_INFO(res.data.data)
+        this.about.about.collect_topics.map((item) => {
+          if (this.idArr.indexOf(item.id) === -1) {
+            this.idArr.unshift(item.id)
+          }
+        })
+        if (this.idArr.indexOf(this.$route.query.id) !== -1) {
+          this.followFlag = true
+        } else {
+          this.followFlag = false
+        }
+        console.log(this.followFlag + ':no')
+      })
     },
     computed: {
       ...mapState([
         'login',
-        'about'
+        'about',
+        'detail'
       ]),
       ...mapGetters([
 //        'isUp'
-      ]),
-      /* 判断是否已关注 */
-      isFollow: {
-        get: function () {
-          if (this.about.about.collect_topics) {
-            this.about.about.collect_topics.map((item) => {
-              if (this.idArr.indexOf(item.id) === -1) {
-                this.idArr.unshift(item.id)
-              }
-//              console.log(this.idArr)
-              if (this.idArr.indexOf(this.$route.query.id) !== -1) {
-                this.followFlag = true
-              } else {
-                this.followFlag = false
-              }
-            })
-            return this.followFlag
-          } else {
-            return false
-          }
-        },
-        set: function (newValue) {
-          this.followFlag = newValue
-        }
+      ])
+//      isFollow: {
+//        get: function () {
+//
+//        },
+//        set: function (newValue) {
+//
+//        }
+//      }
+    },
+    watch: {
+      details: function (newVal, oldVal) {
+        this.details = newVal
+        console.log(this.details)
       }
     },
     methods: {
+      ...mapMutations([
+        'DETAILS',
+        'ABOUT_INFO'
+      ]),
       /* 关注主题 */
       change () {
-        console.log(this.isFollow)
+        console.log(this.followFlag)
         var url = ''
-        if (!this.isFollow) {
+        if (this.followFlag) {
           url = 'collect'
         } else {
           url = 'de_collect'
         }
         this.$ajax({
           method: 'post',
-          url: '/api/v1/topic/' + url,
-          params: {
+          url: '/topic/' + url,
+          data: {
             accesstoken: this.login.user.token,
             topic_id: this.$route.query.id
           }
         }).then((res) => {
-          console.log(res)
+//          console.log(res)
         }).catch((err) => {
           if (err) {
             console.log(err)
@@ -193,7 +210,7 @@
         /* 点赞ajax */
         this.$ajax({
           method: 'post',
-          url: '/api/v1/reply/' + id + '/ups',
+          url: '/reply/' + id + '/ups',
           params: {
             accesstoken: this.login.user.token
           }
@@ -223,17 +240,13 @@
           }
         })
       },
-      toReply () {
-        if (!this.sessUser) {
-          this.toLogin()
-          return false
-        }
-        alert(1)
-      },
+      /* 返回 */
       toBack () {
         this.$router.go(-1)
       },
-      toCommit () {
+      /* 评论回复 */
+      toCommit (id, name, count) {
+        var arg = arguments
         if (!this.sessUser) {
           this.toLogin()
           return false
@@ -243,19 +256,45 @@
           confirmButtonText: '提交',
           showInput: false
         }
+        console.log(this.$route.query.id)
+        console.log(arguments)
         var textarea = '<textarea placeholder="说点什么"></textarea>'
         MessageBox.prompt(textarea, '请输入评论内容', config).then(({ value, action }) => {
           this.sheetVisible = true
           var comText = document.querySelector('textarea').value
-          this.$ajax({
-            method: 'post',
-            url: '',
-            params: {
+          var data = null
+          if (arg.length === 3) {
+            data = {
+              accesstoken: this.login.user.token,
+              content: '@' + name + comText,
+              reply_id: id
+            }
+          } else {
+            data = {
               accesstoken: this.login.user.token,
               content: comText
             }
+          }
+
+          /* 评论ajax */
+          this.$ajax({
+            method: 'post',
+            url: '/topic/' + this.$route.query.id + '/replies',
+            data: data
           }).then((res) => {
-//            console.log(res)
+            console.log(res)
+            /* 触发视图更新 */
+            this.detail.detail.replies.unshift({
+              author: {
+                avatar_url: this.login.user.avatar_url,
+                loginname: this.login.user.loginname
+              },
+              content: data.content,
+              create_at: new Date(),
+              id: '',
+              timer: new Date(),
+              ups: []
+            })
             Toast({
               message: '提交成功',
               duration: 1000
@@ -278,7 +317,8 @@
       /* 格式化时间 */
       timeFormat (list) {
         return list.map((item) => {
-          item.time = timeFormat(item.create_at)
+          item.timer = timeFormat(item.create_at)
+//          this.$set(item, 'timer', timeFormat(item.create_at))
           return item
         })
       },
@@ -298,12 +338,6 @@
 //        console.log(this.$refs.con)
 //      }
     }
-//    watch: {
-//      details: function (newVal, oldVal) {
-//        this.details = newVal
-//        console.log(this.details)
-//      }
-//    }
 //    directives: {
 //      re: {
 //        // 指令的定义
@@ -324,7 +358,7 @@
   }
   .details>p{
     width: 36px;
-    margin: 0 auto;
+    margin: 2rem auto 0;
   }
   .details{
     font-size: .7rem;

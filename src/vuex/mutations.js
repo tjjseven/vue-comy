@@ -1,9 +1,7 @@
-const ABOUT_INFO = (state, about) => {
-  // return {
-  //   ABOUT_INFO: ((state, about) => {
-  //     state.about = about
-  //   })
-  // }
-
+// import * as types from './types'
+const LOADING = (state, loading) => {
+  // [types.LOADING] ((state, loading) => {
+  state.pubState = loading
+  // })
 }
-export default ABOUT_INFO
+export default LOADING

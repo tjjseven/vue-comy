@@ -144,7 +144,7 @@
         })
         // 定义ajax function
         function getListDataFromNet (pageNum, pageSize, successCallback, errorCallback) {
-          self.$ajax.get('/api/v1/topics', {
+          self.$ajax.get('/topics', {
             params: {
               tab: self.tab,
               page: pageNum, // 页码
