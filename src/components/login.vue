@@ -39,7 +39,7 @@
       ]),
       sub () {
         if (this.user.token) {
-          this.LOADING(true)
+//          this.LOADING(true)
           this.$ajax({
             method: 'post',
             url: '/accesstoken',

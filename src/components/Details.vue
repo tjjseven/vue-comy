@@ -13,7 +13,7 @@
         <!--center-->
         <div class="table_cell" style="width: 63%;padding: 0 .5rem;">
           <p>{{details.author.loginname}}</p>
-          <span>{{authorTime}}</span>
+          <span>{{details.create_at | timeFormat}}</span>
         </div>
         <!--right-->
         <div class="table_cell" style="width: 25%;font-size: .6rem;color: #5f5f5f;text-align: right;padding-right: .4rem">
@@ -32,7 +32,7 @@
       <h2 v-if="!details.replies.length" style="margin-top: 2rem;text-align: center">没有人评论，快来抢沙发...</h2>
       <h2 v-else class="commit_count">{{details.replies.length}}人评论:</h2>
       <ul class="commit_list">
-        <li v-for="(replies, index) in timeFormat(details.replies)" :key="index">
+        <li v-for="(replies, index) in orderUps" :key="index">
           <div class="table" :style="{marginTop:'1rem',width: '100%'}">
             <!--left-->
             <div class="table_cell" style="width: 12%">
@@ -43,7 +43,7 @@
               <p>{{replies.author.loginname}} <span style="color:#386ac0">#{{index+1}}楼
                 <span v-show="details.author.loginname===replies.author.loginname">【楼主】</span></span>
               </p>
-              <span>{{replies.timer}}</span>
+              <span>{{replies.create_at | timeFormat}}</span>
             </div>
             <!--right-->
             <div class="table_cell" style="width: 22%;text-align: right">
@@ -71,7 +71,7 @@
   </div>
 </template>
 <script>
-  import timeFormat from '../assets/js/init_date'
+//  import timeFormat from '../assets/js/init_date'
   import { MessageBox, Toast } from 'mint-ui'
   import { mapState, mapGetters, mapMutations } from 'vuex'
   export default {
@@ -80,10 +80,9 @@
       return {
         sessUser: '',
         details: '',
-        authorTime: '',
         content: '',
         sheetVisible: true,
-        followFlag: '',
+        followFlag: false,
         actions: [
           {name: '返回', method: this.toBack},
           {name: '评论', method: this.toCommit}
@@ -99,7 +98,6 @@
      *
      * */
     mounted () {
-      console.log(timeFormat(new Date()))
       /* 获取session user */
       this.sessUser = sessionStorage.getItem('user')
       /* 获取主题信息 */
@@ -108,9 +106,7 @@
         url: '/topic/' + this.$route.query.id
       }).then((res) => {
         this.details = res.data.data
-        console.log(this.details)
         this.DETAILS(res.data.data)
-        this.authorTime = timeFormat(this.details.create_at)
         switch (this.details.tab) {
           case 'share':
             this.details.tab = '分享'
@@ -129,6 +125,9 @@
       })
       /* 判断是否已关注 */
 //      JSON.stringify(this.about.about) === '{}'
+      if (!this.sessUser) {
+        return
+      }
       this.$ajax({
         method: 'get',
         url: '/user/' + this.login.user.loginname
@@ -144,7 +143,6 @@
         } else {
           this.followFlag = false
         }
-        console.log(this.followFlag + ':no')
       })
     },
     computed: {
@@ -155,7 +153,21 @@
       ]),
       ...mapGetters([
 //        'isUp'
-      ])
+      ]),
+      orderCommit () {
+        this.details.replies.map((item) => {
+          item.timeCount = new Date(item.create_at).getTime()
+          console.log()
+        })
+        return this.orderBy(this.details.replies, 'timeCount', -1)
+      },
+      orderUps () {
+        this.orderCommit.map((item) => {
+          item.upLength = item.ups.length
+          console.log(item.timeCount)
+        })
+        return this.orderBy(this.orderCommit, 'upLength', -1)
+      }
 //      isFollow: {
 //        get: function () {
 //
@@ -312,14 +324,6 @@
         }, (err) => {
           this.sheetVisible = true
           console.log(err)
-        })
-      },
-      /* 格式化时间 */
-      timeFormat (list) {
-        return list.map((item) => {
-          item.timer = timeFormat(item.create_at)
-//          this.$set(item, 'timer', timeFormat(item.create_at))
-          return item
         })
       },
       /* 跳转login */

@@ -10,15 +10,22 @@
       v-model="popupMsg"
       position="bottom"
       modal>
-      <div @click="popupMsg=!popupMsg" class="my_topic">
-        <p class="back">
+      <div class="my_topic">
+        <p class="back" @click="popupMsg=!popupMsg">
           <i class="mintui mintui-back"></i>返回
         </p>
-        <ul>
+        <ul class="me_msg">
           <li v-for="(item,index) in readMsg" :key="index">
-            {{toLocaleString(item.reply.create_at)}}{{item.author.loginname}}在主题
-            <router-link :to="{path: '/details', query: {id: item.topic.id}}">[{{item.topic.title}}]</router-link>
-            中回复你：{{item.reply.content}}
+            <p class="time">{{format(item.reply.create_at)}}</p>
+            <div class="msg_content">
+              <p>{{item.author.loginname}}<span>他的主题</span></p>
+
+              <p class="msg_topic">
+                在<router-link :to="{path: '/details', query: {id: item.topic.id}}">【{{item.topic.title}}】</router-link>中回复你：
+              </p>
+              {{item.reply.content}}
+            </div>
+
           </li>
         </ul>
       </div>
@@ -44,8 +51,7 @@
       ])
     },
     mounted () {
-      var d = new Date('2017-12-27T07:38:45.647Z')
-      var str = d.Format('yyyy年MM月dd日 hh:mm:ss 星期w')
+      var str = this.format('2017-12-27T07:38:45.647Z')
       console.log(str)
       /* 获取未读消息数 */
 //      this.$ajax({
@@ -99,8 +105,31 @@
     .mint-cell-wrapper:active{
       background: #ececec;
     }
-    a{
-      color:#41b883;
+    .me_msg{
+      padding:0 1rem;
+      li{
+        border-bottom: 1px solid #c7c7c7;
+        padding:1rem 0 .5rem;
+      }
+      .time{
+        margin-bottom: .5rem;
+        border-left: 5px solid #41b883;
+        padding: .5rem;
+      }
+      .msg_content{
+        font-size: .7rem;
+        padding:0 .5rem;
+        span{
+          margin-left: 5rem;
+        }
+      }
+      .msg_topic{
+        margin: .2rem 0 .5rem;
+        line-height: 1.2rem;
+      }
+      a{
+        color:#41b883;
+      }
     }
   }
 </style>

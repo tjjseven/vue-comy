@@ -1,20 +1,29 @@
+/* eslint-disable */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './vuex/store'
 
-import axios from 'axios'
+// 自定义插件
+import MyPlugin from './assets/js/myplugin/my_plugin'
+// 调用 `MyPlugin.install(Vue)`
+Vue.use(MyPlugin)
+
 // 引入自定义js过滤方法文件
 // var myFilter = require('./assets/js/filter.js')
 import myFilter from './assets/js/filter.js'
-import store from './vuex/store'
+Vue.prototype.myFilter = myFilter
+
+import axios from 'axios'
+Vue.prototype.$ajax = axios
+axios.defaults.baseURL = 'https://www.vue-js.com/api/v1'
 
 /* 引入mint-ui */
 import 'mint-ui/lib/style.css'
 import { Header, Button, Tabbar, TabItem, Navbar, TabContainer, TabContainerItem, Spinner,
         Actionsheet, MessageBox, Cell, Field, Badge, Popup, Switch, Radio, Indicator } from 'mint-ui'
-
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 Vue.component(Tabbar.name, Tabbar)
@@ -32,13 +41,11 @@ Vue.component(Popup.name, Popup)
 Vue.component(Switch.name, Switch)
 Vue.component(Radio.name, Radio)
 
-Vue.prototype.myFilter = myFilter
-Vue.prototype.$ajax = axios
-axios.defaults.baseURL = 'https://www.vue-js.com/api/v1'
 // 请求拦截（配置发送请求的信息）
 axios.interceptors.request.use(function (config) {
   // 处理请求之前的配置
   if (store.state.pubState) {
+    console.log('111')
     Indicator.open({
       text: '加载中...',
       spinnerType: 'fading-circle'
@@ -49,7 +56,6 @@ axios.interceptors.request.use(function (config) {
   // 请求失败的处理
   return Promise.reject(error)
 })
-
 // 响应拦截（配置请求回来的信息）
 axios.interceptors.response.use(function (response) {
   // 处理响应数据
