@@ -99,8 +99,9 @@
     width: 100%;
     height: 100%;
     min-height: 100%;
-    overflow-y:auto;
+    overflow:hidden;
     .my_topic{
+      height: 100%;
       .back{
         font-size: .8rem;
         background: #41b883;

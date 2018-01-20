@@ -71,7 +71,6 @@
   </div>
 </template>
 <script>
-//  import timeFormat from '../assets/js/init_date'
   import { MessageBox, Toast } from 'mint-ui'
   import { mapState, mapGetters, mapMutations } from 'vuex'
   export default {
@@ -100,6 +99,7 @@
     mounted () {
       /* 获取session user */
       this.sessUser = sessionStorage.getItem('user')
+      this.LOADING(false)
       /* 获取主题信息 */
       this.$ajax({
         method: 'get',
@@ -157,14 +157,13 @@
       orderCommit () {
         this.details.replies.map((item) => {
           item.timeCount = new Date(item.create_at).getTime()
-          console.log()
         })
         return this.orderBy(this.details.replies, 'timeCount', -1)
       },
       orderUps () {
         this.orderCommit.map((item) => {
           item.upLength = item.ups.length
-          console.log(item.timeCount)
+//          console.log(item.timeCount)
         })
         return this.orderBy(this.orderCommit, 'upLength', -1)
       }
@@ -186,7 +185,8 @@
     methods: {
       ...mapMutations([
         'DETAILS',
-        'ABOUT_INFO'
+        'ABOUT_INFO',
+        'LOADING'
       ]),
       /* 关注主题 */
       change () {
@@ -278,7 +278,7 @@
           if (arg.length === 3) {
             data = {
               accesstoken: this.login.user.token,
-              content: '@' + name + comText,
+              content: '@' + name + ' ' + comText,
               reply_id: id
             }
           } else {

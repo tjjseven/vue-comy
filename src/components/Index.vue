@@ -1,12 +1,8 @@
 <template>
   <div class="index">
-    <!--<div><a href=""></a></div>-->
-    <!--&lt;!&ndash;滑动区域&ndash;&gt;-->
-    <!--<Scroll :tab="navMsg[0].tab" scroll="scroll1"/>-->
     <mt-navbar v-model="selected" fixed>
       <mt-tab-item :id="index" v-for="(item, index) in navMsg" :key="index">{{item.label}}</mt-tab-item>
     </mt-navbar>
-
     <!-- tab-container -->
     <mt-tab-container v-model="selected" swipeable>
       <mt-tab-container-item :id="index" v-for="(item, index) in navMsg" :key="index">
@@ -14,7 +10,6 @@
       </mt-tab-container-item>
     </mt-tab-container>
   </div>
-
 </template>
 
 <script>
@@ -37,12 +32,6 @@
           { label: '招聘', tab: 'job' }
         ]
       }
-    },
-    mounted () {
-      console.log('index')
-    },
-    methods: {
-
     }
   }
 </script>
@@ -72,8 +61,5 @@
     padding: .6rem 1rem;
     margin-bottom: .2rem;
     border-bottom: 2px solid #e4e7e1;
-
   }
-
-
 </style>

@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import * as types from './types'
 import * as actions from './axios'
-import * as mutations from './mutations'
+// import * as mutations from './mutations'
 import login from './modules/login'
 import about from './modules/about'
 import detail from './modules/details'
@@ -12,7 +13,12 @@ const store = new Vuex.Store({
   state: {
     pubState: false
   },
-  mutations,
+  mutations: {
+    [types.LOADING] (state, loading) {
+      state.pubState = loading
+    }
+  },
+  // mutations,
   actions,
   modules: {
     login,

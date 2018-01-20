@@ -59,11 +59,11 @@
         <ul v-else class="topic_list">
           <p v-if="aboutMsg[typeTopics].length===0">暂无主题...</p>
           <router-link v-else :to="{path: '/details', query: {id: data.id}}" tag="li"
-          v-for="(data, index) in timeFormat(aboutMsg[typeTopics])" :key='index'>
+          v-for="(data, index) in aboutMsg[typeTopics]" :key='index'>
             <div class="two_ell">{{data.title}}</div>
             <div class="topic_author">
               <span>作者:{{data.author.loginname}}</span>
-              <span style="float: right">最近回复:{{data.time}}</span>
+              <span style="float: right">最近回复:{{data.last_reply_at | timeFormat}}</span>
             </div>
           </router-link>
         </ul>
@@ -72,7 +72,6 @@
   </div>
 </template>
 <script>
-  import timeFormat from '../assets/js/init_date'
   import { MessageBox, Toast } from 'mint-ui'
   import { mapState, mapActions, mapMutations } from 'vuex'
   export default {
@@ -114,6 +113,7 @@
       ...mapMutations([
         'ABOUT_INFO'
       ]),
+      /* 发布主题 */
       release () {
         switch (this.topicTab) {
           case '分享':
@@ -142,8 +142,8 @@
         }
         this.$ajax({
           method: 'post',
-          url: '',
-          params: {
+          url: '/topics ',
+          data: {
             title: this.topicName,
             tab: this.topicTab,
             content: this.topicValue
@@ -164,6 +164,7 @@
           })
         })
       },
+      /* 登出 */
       logout () {
         var self = this
         MessageBox.confirm('确定执行此操作?', {closeOnClickModal: false}).then(action => {
@@ -173,24 +174,20 @@
           console.log(err)
         })
       },
+      /* 获取主题数量 */
       getCount () {
         for (var i = 0; i < this.aboutList.length; i++) {
           this.aboutList[i].count = this.aboutMsg[this.aboutList[i].type].length
         }
       },
+      /* 打开与我相关主题 */
       myTopics (msg) {
         this.popupVisible = !this.popupVisible
         this.typeTopics = msg
-      },
-      /* 格式化时间 */
-      timeFormat (list) {
-        return list.map((item) => {
-          item.time = timeFormat(item.last_reply_at)
-          return item
-        })
       }
     },
     mounted () {
+      /* 获取个人主题信息 */
       this.$ajax({
         method: 'get',
         url: '/user/' + this.login.user.loginname

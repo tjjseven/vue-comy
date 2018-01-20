@@ -6,7 +6,7 @@
       <!--展示上拉加载的数据列表-->
       <ul id="dataList" class="data-list">
         <router-link :to="{path: '/details', query: {id: data.id}}" tag="li"
-                       v-for="(data, index) in timeFormat(pdlist)" :key='index'>
+                       v-for="(data, index) in tabFormat(pdlist)" :key='index'>
           <!--top-->
           <div class="list_top table">
             <div class="top_img table_cell">
@@ -25,7 +25,7 @@
           <div class="list_btm">
             <div class="btm_left">
               <span>{{data.author.loginname}}</span>
-              <span style="font-size: .6rem">发布于{{data.time}}</span>
+              <span style="font-size: .6rem">发布于{{data.create_at | timeFormat}}</span>
             </div>
             <div class="btm_right">
               <svg class="icon" aria-hidden="true">
@@ -47,7 +47,7 @@
 <script>
   import 'mescroll/src/mescroll.min.css'
   import MeScroll from 'mescroll'
-  import timeFormat from '../assets/js/init_date'
+  import { mapMutations } from 'vuex'
   export default {
     name: 'scroll',
     data () {
@@ -58,8 +58,7 @@
     },
     props: ['tab', 'scroll'],
     mounted () {
-      console.log('scroll')
-
+      this.LOADING(false)
       // 创建MeScroll对象,down可以不用配置,因为内部已默认开启下拉刷新,重置列表数据为第一页
       // 解析: 下拉回调默认调用mescroll.resetUpScroll(); 而resetUpScroll会将page.num=1,再执行up.callback,从而实现刷新列表数据为第一页;
       var self = this
@@ -92,6 +91,9 @@
       })
     },
     methods: {
+      ...mapMutations([
+        'LOADING'
+      ]),
       imgLoad (img, callcack) {
         img.forEach((img) => {
           var timer = setInterval(function () {
@@ -116,6 +118,7 @@
       upCallback (page) {
         // 联网加载数据
         var self = this
+        this.LOADING(false)
         // 调用
         getListDataFromNet(page.num, page.size, function (curPageData) {
           // curPageData=[]; //打开本行注释,可演示列表无任何数据empty的配置
@@ -152,20 +155,18 @@
             }
           }).then((response) => {
             var data = response.data.data
-            console.log(response)
-            successCallback && successCallback(data)// 成功回调
+            successCallback && successCallback(data) // 成功回调
           }).catch((error) => {
             if (error) {
               console.log(error)
             }
-            errorCallback && errorCallback()// 失败回调
+            errorCallback && errorCallback() // 失败回调
           })
         }
       },
-      /* 格式化时间 */
-      timeFormat (list) {
-        return list.map((item) => {
-          item.time = timeFormat(item.create_at)
+      /* 格式化tab */
+      tabFormat (list) {
+        list.map(function (item) {
           switch (item.tab) {
             case 'share':
               item.tab = '分享'
@@ -177,12 +178,9 @@
               item.tab = '招聘'
               break
           }
-          return item
         })
+        return list
       }
-    },
-    computed: {
-
     }
   }
 </script>

@@ -14,7 +14,6 @@
 <script>
   import { Toast } from 'mint-ui'
   import { mapActions, mapMutations } from 'vuex'
-//  import { USER_LOGIN } from '../vuex/store'
   export default {
     name: 'login',
     data () {
@@ -24,9 +23,6 @@
           token: 'a38f7992-0096-4c65-b3ff-b7db7d264d98'
         }
       }
-    },
-    mounted () {
-
     },
     methods: {
       // 映射USER_LOGIN
@@ -39,7 +35,8 @@
       ]),
       sub () {
         if (this.user.token) {
-//          this.LOADING(true)
+          this.LOADING(true)
+          /* 获取个人信息 */
           this.$ajax({
             method: 'post',
             url: '/accesstoken',
@@ -47,7 +44,6 @@
               accesstoken: this.user.token
             }
           }).then((res) => {
-//            console.log(res)
             for (let item in res.data) {
               this.$set(this.user, item, res.data[item])
             }
@@ -65,16 +61,12 @@
               this.$router.replace({path: '/about'})
             }
             this.$router.replace({path: this.$route.query.redirect})
-            Toast({
-              message: '登录成功',
-              duration: 500
-            })
           })
             .catch((err) => {
               if (err) {
                 console.log(err)
                 Toast({
-                  message: 'token错误，登录失败',
+                  message: 'token或网络错误，登录失败',
                   duration: 1000
                 })
               }
@@ -95,7 +87,7 @@
     button{
       margin-top: 1rem;
       background: #1bb973;
-      box-shadow: rgba(0, 0, 0, 0.117647) 0px 2px 6px, rgba(0, 0, 0, 0.239216) 0px 1px 2px;
+      box-shadow: rgba(0, 0, 0, 0.117647) 0 2px 6px, rgba(0, 0, 0, 0.239216) 0 1px 2px;
     }
     .tips{
       margin:5rem 0 1rem;

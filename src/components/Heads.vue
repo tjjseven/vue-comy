@@ -1,7 +1,5 @@
 <template>
-  <mt-header :title="headerC" fixed>
-
-  </mt-header>
+  <mt-header :title="headerC" fixed></mt-header>
 </template>
 <script>
   export default{

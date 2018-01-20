@@ -11,19 +11,14 @@ import MyPlugin from './assets/js/myplugin/my_plugin'
 // 调用 `MyPlugin.install(Vue)`
 Vue.use(MyPlugin)
 
-// 引入自定义js过滤方法文件
-// var myFilter = require('./assets/js/filter.js')
-import myFilter from './assets/js/filter.js'
-Vue.prototype.myFilter = myFilter
-
 import axios from 'axios'
 Vue.prototype.$ajax = axios
 axios.defaults.baseURL = 'https://www.vue-js.com/api/v1'
-
+axios.defaults.timeout = 5000
 /* 引入mint-ui */
 import 'mint-ui/lib/style.css'
 import { Header, Button, Tabbar, TabItem, Navbar, TabContainer, TabContainerItem, Spinner,
-        Actionsheet, MessageBox, Cell, Field, Badge, Popup, Switch, Radio, Indicator } from 'mint-ui'
+        Actionsheet, MessageBox, Cell, Field, Badge, Popup, Switch, Radio, Indicator, Toast } from 'mint-ui'
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 Vue.component(Tabbar.name, Tabbar)
@@ -44,16 +39,17 @@ Vue.component(Radio.name, Radio)
 // 请求拦截（配置发送请求的信息）
 axios.interceptors.request.use(function (config) {
   // 处理请求之前的配置
+  console.log(store.state.pubState)
   if (store.state.pubState) {
-    console.log('111')
     Indicator.open({
-      text: '加载中...',
+      // text: '加载中...',
       spinnerType: 'fading-circle'
     })
   }
   return config
 }, function (error) {
   // 请求失败的处理
+  Indicator.close()
   return Promise.reject(error)
 })
 // 响应拦截（配置请求回来的信息）
@@ -63,6 +59,11 @@ axios.interceptors.response.use(function (response) {
   return response
 }, function (error) {
   // 处理响应失败
+  Indicator.close()
+  Toast({
+    message: '请求超时，请检查网络设置',
+    duration: 1000
+  })
   return Promise.reject(error)
 })
 
