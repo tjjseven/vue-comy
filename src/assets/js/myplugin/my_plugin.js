@@ -135,6 +135,27 @@ tjjPlugin.install = function (vue, options) {
     return new Date(formatTime).Format("yyyy年MM月dd日 hh:mm:ss 星期w")
   }
 
+  vue.prototype.saveElPosition = function (key, el) {
+    if (!key) return
+    if (el === 'window'){
+      saveXy(window.pageXOffset, window.pageYOffset)
+    } else {
+      const docRect = document.documentElement.getBoundingClientRect()
+      const elRect = el.getBoundingClientRect()
+      var elPosition = {
+        x: elRect.left - docRect.left,
+        y: elRect.top - docRect.top
+      }
+      saveXy(elPosition.x, elPosition.y)
+    }
+    function saveXy(x, y) {
+      window.sessionStorage.setItem(key, JSON.stringify({
+        x: x,
+        y: y
+      }))
+    }
+  }
+
   /**
    *
    * @type {{telNumberCheck: vue.$service.telNumberCheck}}

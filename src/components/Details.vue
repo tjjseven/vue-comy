@@ -32,7 +32,7 @@
       <h2 v-if="!details.replies.length" style="margin-top: 2rem;text-align: center">没有人评论，快来抢沙发...</h2>
       <h2 v-else class="commit_count">{{details.replies.length}}人评论:</h2>
       <ul class="commit_list">
-        <li v-for="(replies, index) in orderUps" :key="index">
+        <li v-for="(replies, index) in orderCommit" :key="index">
           <div class="table" :style="{marginTop:'1rem',width: '100%'}">
             <!--left-->
             <div class="table_cell" style="width: 12%">
@@ -154,18 +154,21 @@
       ...mapGetters([
 //        'isUp'
       ]),
+      /* 评论排序 */
       orderCommit () {
-        this.details.replies.map((item) => {
-          item.timeCount = new Date(item.create_at).getTime()
-        })
-        return this.orderBy(this.details.replies, 'timeCount', -1)
-      },
-      orderUps () {
-        this.orderCommit.map((item) => {
+        var commitIsUps = this.details.replies.filter((item) => {
           item.upLength = item.ups.length
-//          console.log(item.timeCount)
+          return item.ups.length
         })
-        return this.orderBy(this.orderCommit, 'upLength', -1)
+        var upsArr = this.orderBy(commitIsUps, 'upLength', -1)
+
+        var commitNoUps = this.details.replies.filter((item) => {
+          item.timeCount = new Date(item.create_at).getTime()
+          return item.ups.length === 0
+        })
+        var timeArr = this.orderBy(commitNoUps, 'timeCount', -1)
+
+        return upsArr.concat(timeArr)
       }
 //      isFollow: {
 //        get: function () {
@@ -176,12 +179,12 @@
 //        }
 //      }
     },
-    watch: {
-      details: function (newVal, oldVal) {
-        this.details = newVal
-        console.log(this.details)
-      }
-    },
+//    watch: {
+//      details: function (newVal, oldVal) {
+//        this.details = newVal
+//        console.log(this.details)
+//      }
+//    },
     methods: {
       ...mapMutations([
         'DETAILS',

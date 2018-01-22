@@ -39,7 +39,6 @@ Vue.component(Radio.name, Radio)
 // 请求拦截（配置发送请求的信息）
 axios.interceptors.request.use(function (config) {
   // 处理请求之前的配置
-  console.log(store.state.pubState)
   if (store.state.pubState) {
     Indicator.open({
       // text: '加载中...',

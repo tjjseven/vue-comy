@@ -214,9 +214,11 @@
       }
     }
     .about_bg{
-      background: #55585f;
+      background: url("../assets/img/bg.jpg") no-repeat center;
+      background-size: cover;
       width: 100%;
       height: 7rem;
+      box-shadow: rgba(0, 0, 0, 0.117647) 0 2px 6px, rgba(0, 0, 0, 0.239216) 0 1px 2px;
     }
     .about_picture{
       width: 4.5rem;
@@ -288,7 +290,7 @@
       opacity: .5;
     }
     .about_site,.release{
-      padding: 1rem 1.5rem 0;
+      margin: 1rem 1.5rem 0;
     }
     .about_site{
       font-size: .7rem;
@@ -301,6 +303,11 @@
           color: #41b883;
         }
       }
+    }
+    .release,.topic_list{
+      height:calc(~"100% - 50px");
+      overflow-x:hidden ;
+      overflow-y: auto;
     }
     .release{
       .mint-radiolist{

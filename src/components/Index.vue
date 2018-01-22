@@ -30,8 +30,23 @@
           { label: '问答', tab: 'ask' },
           { label: 'weex', tab: 'weex' },
           { label: '招聘', tab: 'job' }
-        ]
+        ],
+        el: '',
+        key: ''
       }
+    },
+    activated () {
+      this.el = document.querySelector('.mescroll-bounce')
+      this.key = history.state.key
+      if (window.sessionStorage.getItem(this.key)) {
+        var elPosition = JSON.parse(window.sessionStorage.getItem(this.key))
+        document.querySelector('#scroll' + this.selected).scrollTop = -(elPosition.y - 110)
+      }
+    },
+    beforeRouteLeave (to, from, next) {
+      this.el = document.querySelector('#scroll' + this.selected + ' .mescroll-bounce')
+      this.saveElPosition(this.key, this.el)
+      next()
     }
   }
 </script>

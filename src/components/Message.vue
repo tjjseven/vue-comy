@@ -74,7 +74,6 @@
       }).then((res) => {
         this.unreadMsg = res.data.data.hasnot_read_messages
         this.readMsg = res.data.data.has_read_messages
-        console.log(res)
       }).catch((err) => {
         if (err) {
           console.log(err)

@@ -10,7 +10,6 @@ Vue.use(Router)
 
 export default new Router({
   mode: 'history',
-  saveScrollPosition: true,
   linkExactActiveClass: 'actClass',
   routes: [
     {
