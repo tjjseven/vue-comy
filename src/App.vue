@@ -57,7 +57,7 @@
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size: .8rem;
+    font-size: .7rem;
     line-height: 1rem;
     .height;
   }

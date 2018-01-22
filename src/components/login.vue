@@ -85,6 +85,7 @@
   .login{
     padding:5rem 2rem 0;
     button{
+      font-size: 16px;
       margin-top: 1rem;
       background: #1bb973;
       box-shadow: rgba(0, 0, 0, 0.117647) 0 2px 6px, rgba(0, 0, 0, 0.239216) 0 1px 2px;

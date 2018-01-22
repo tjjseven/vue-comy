@@ -104,6 +104,9 @@
     .mint-cell-wrapper:active{
       background: #ececec;
     }
+    .mint-cell-wrapper{
+      font-size: 14px;
+    }
     .me_msg{
       height:calc(~"100% - 50px");
       overflow-x:hidden ;

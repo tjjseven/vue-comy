@@ -277,6 +277,13 @@
         MessageBox.prompt(textarea, '请输入评论内容', config).then(({ value, action }) => {
           this.sheetVisible = true
           var comText = document.querySelector('textarea').value
+          if (!comText) {
+            Toast({
+              message: '不能为空',
+              duration: 1000
+            })
+            return
+          }
           var data = null
           if (arg.length === 3) {
             data = {

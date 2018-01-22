@@ -89,10 +89,9 @@
         aboutSite: [
           {name: '技术栈：', text: 'vue2 + vue-router + vuex + axios + mint-ui + mescroll'},
           {name: '名称：', text: 'vue社区'},
-          {name: '作者：', text: '<a href="">tjjseven</a>'},
-          {name: 'GitHub：', text: '<a href="">https://github.com/tjjseven/vue-comy</a>'},
-          {name: '版本：', text: 'v1.0.0'},
-          {name: '参考：', text: '111'}
+          {name: '作者：', text: '<a href="https://github.com/tjjseven">tjjseven</a>'},
+          {name: 'GitHub：', text: '<a href="tseven.top/vue-comy/dist">https://github.com/tjjseven/vue-comy</a>'},
+          {name: '版本：', text: 'v1.0.0'}
         ],
         topicName: '',
         topicTab: '问答',
@@ -290,10 +289,10 @@
       opacity: .5;
     }
     .about_site,.release{
-      margin: 1rem 1.5rem 0;
+      margin-top: 1rem;
+      padding:0 1.5rem;
     }
     .about_site{
-      font-size: .7rem;
       margin-top:1rem;
       td{
         vertical-align: top;
@@ -315,6 +314,9 @@
         border-top: 1px solid #e4e7e1;
         border-bottom: 1px solid #e4e7e1;
       }
+      .mint-cell-wrapper{
+        font-size: .7rem !important;
+      }
       .mint-cell{
         display: inline-block;
         background: none;
@@ -331,7 +333,7 @@
       }
       .mint-radiolist-title{
         color: #000;
-        font-size: 16px;
+        font-size: 14px;
       }
       .is-textarea{
         width: 100%;
@@ -351,7 +353,6 @@
     .topic_list{
       padding: 0 1rem;
       margin-top: 1rem;
-      font-size:.7rem;
       p{
         text-align: center;
         margin-top: 2rem;
