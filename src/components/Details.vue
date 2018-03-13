@@ -32,7 +32,7 @@
       <h2 v-if="!details.replies.length" style="margin-top: 2rem;text-align: center">没有人评论，快来抢沙发...</h2>
       <h2 v-else class="commit_count">{{details.replies.length}}人评论:</h2>
       <ul class="commit_list">
-        <li v-for="(replies, index) in orderCommit" :key="index">
+        <li v-for="(replies, index) in details.replies" :key="index">
           <div class="table" :style="{marginTop:'1rem',width: '100%'}">
             <!--left-->
             <div class="table_cell" style="width: 12%">
