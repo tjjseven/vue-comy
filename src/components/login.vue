@@ -20,7 +20,7 @@
       return {
         tokenFlag: false,
         user: {
-          token: 'a38f7992-0096-4c65-b3ff-b7db7d264d98'
+          token: ''
         }
       }
     },
